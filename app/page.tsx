@@ -113,7 +113,7 @@ const GiftIcon = ({ className }: { className?: string }) => (
 
 export default function HomePage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-
+  const { user, isLoading } = useUser();
   const featuredProducts = [
     {
       id: 1,
@@ -188,7 +188,10 @@ export default function HomePage() {
           <div className="grid gap-6 lg:grid-cols-2 lg:gap-12 items-center">
             <div className="space-y-4">
 
+            {user && !isLoading && 
             
+             <h1>Welcome {user.given_name}</h1>
+            }
               <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl">
               
                 Everything Your Dog Needs in One Place
