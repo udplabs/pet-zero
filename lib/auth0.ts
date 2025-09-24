@@ -4,8 +4,8 @@ import { ManagementClient } from 'auth0';
 import { Auth0Client } from '@auth0/nextjs-auth0/server';
 import type { SessionData } from '@auth0/nextjs-auth0/types';
 import type { ManagementClientOptionsWithClientSecret as ManagementClientOptions } from 'auth0';
-import concat from 'lodash-es/concat';
-import orderBy from 'lodash-es/orderBy';
+//TODO: remove lodash dependency
+import { concat, orderBy } from 'lodash';
 
 // Initialize the Auth0 client
 export const auth0 = new Auth0Client({
