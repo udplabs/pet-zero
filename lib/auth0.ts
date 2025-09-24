@@ -4,8 +4,7 @@ import { ManagementClient } from 'auth0';
 import { Auth0Client } from '@auth0/nextjs-auth0/server';
 import type { SessionData } from '@auth0/nextjs-auth0/types';
 import type { ManagementClientOptionsWithClientSecret as ManagementClientOptions } from 'auth0';
-//TODO: remove lodash dependency
-import { concat, orderBy } from 'lodash';
+import { sortBy } from '@/lib/utils';
 
 // Initialize the Auth0 client
 export const auth0 = new Auth0Client({
@@ -160,7 +159,7 @@ class Auth0ManagementClient extends ManagementClient {
 			];
 		});
 
-		return orderBy(concat(enabledFactors, enrolledFactors), ['enrolled', 'type'], ['desc', 'asc']);
+		return sortBy([...(enabledFactors ?? []), ...(enrolledFactors ?? [])], ['enrolled', 'type'], ['desc', 'asc']);
 	}
 }
 
