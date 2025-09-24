@@ -1,24 +1,29 @@
-//<pre>{JSON.stringify(user, null, 2)}</pre>
-'use client';
-import { useUser } from "@auth0/nextjs-auth0"
+import { getSession } from '@/lib/auth0';
+import { redirect } from 'next/navigation';
+import { UserProfileCard } from '@/components/user-profile/user-profile-card';
+import { LinkedAccounts } from '@/components/user-profile/linked-accounts';
+import { Authenticators } from '@/components/user-profile/authenticators/authenticators';
+import { DebugCard } from '@/components/user-profile/debug-card';
+export default async function ProfilePage() {
+	const { tokenSet, user } = await getSession();
 
-export default function Profile() {
-  const { user, isLoading } = useUser();
-  return (
-    <>
-      {isLoading && <p>Loading...</p>}
-      {user && (
-        <div style={{ textAlign: "left" }}>
-          <img
-            src={user.picture}
-            alt="Profile"
-            style={{ borderRadius: "50%", width: "80px", height: "80px" }}
-          />
-          <h1>Name: {user.given_name} {user.family_name}</h1>
-          <p>Email: {user.email}</p>
-         
-        </div>
-      )}
-    </>
-  );
+	if (!user?.sub) {
+		redirect('/');
+	}
+
+	return (
+		<div className='bg-background mx-auto flex size-full min-w-0 flex-col gap-6 overflow-auto p-4 pb-8 md:max-w-4xl md:p-6'>
+			{/* User profile info */}
+			<UserProfileCard />
+
+			{/* Linked accounts */}
+			<LinkedAccounts />
+
+			{/* Authenticators */}
+			<Authenticators />
+
+			{/* Debug / full tokens */}
+			<DebugCard {...{ tokenSet }} />
+		</div>
+	);
 }
