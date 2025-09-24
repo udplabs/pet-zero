@@ -2,7 +2,7 @@
 import assert from 'assert';
 import { ManagementClient } from 'auth0';
 import { Auth0Client } from '@auth0/nextjs-auth0/server';
-import type { SessionData } from '@auth0/nextjs-auth0/types';
+import type { SessionData, User } from '@auth0/nextjs-auth0/types';
 import type { ManagementClientOptionsWithClientSecret as ManagementClientOptions } from 'auth0';
 import { sortBy } from '@/lib/utils';
 
@@ -44,6 +44,44 @@ export async function getSession(throwError = false): Promise<SessionData | null
 	}
 
 	return session;
+}
+
+/**
+ * Get the authenticated user from the current session.
+ * Returns id_token claims -- essentially a userinfo call.
+ * Use userUserProfile() to get the full user profile from the Management API.
+ *
+ * Overloads
+ * - getUser(): Promise<User | undefined>          — returns undefined when not authenticated.
+ * - getUser(true): Promise<User>                  — throws APIError('unauthorized:auth') when missing.
+ */
+export async function getUser(): Promise<User>;
+export async function getUser(throwError: false): Promise<User | undefined>;
+export async function getUser(throwError = true): Promise<User | undefined> {
+	if (!auth0) {
+		return;
+	}
+
+	const { user } = (await getSession()) || {};
+
+	if (throwError && !user?.sub) {
+		throw new Error('unauthorized:auth');
+	}
+
+	return user;
+}
+
+/**
+ * Persist changes to the current session.
+ *
+ * Typical use
+ * - After refreshing tokens or modifying custom session properties.
+ */
+export async function updateSession(session: SessionData) {
+	if (!auth0) {
+		return;
+	}
+	await auth0.updateSession(session);
 }
 
 export interface Factor {

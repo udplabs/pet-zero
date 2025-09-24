@@ -6,7 +6,7 @@ import { toast as sonnerToast } from 'sonner';
 import type { Key, SWRConfiguration, SWRResponse } from 'swr';
 import useSWR from 'swr';
 
-const KEY = '/api/me';
+const KEY = '/api/v1/me';
 
 interface Address {
 	/**

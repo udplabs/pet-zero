@@ -1,5 +1,6 @@
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
+import type { NextRequest } from 'next/server';
 
 export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs));
@@ -54,3 +55,52 @@ type SortIndex<T> = {
 	item: T;
 	idx: number;
 };
+
+export function getSearchParams<T>(req: NextRequest, keys: string[] = []) {
+	console.debug('parsing search params...');
+
+	const result: T = {} as T;
+
+	if (req.nextUrl?.search) {
+		const searchParams = new URLSearchParams(req.nextUrl.search);
+
+		keys.forEach((key) => {
+			const value = searchParams.get(key);
+			if (value !== null) {
+				if (value === 'true') {
+					(result as any)[key] = true;
+				} else if (value === 'false') {
+					(result as any)[key] = false;
+				} else if (!isNaN(Number.parseInt(value))) {
+					(result as any)[key] = parseInt(value);
+				} else {
+					(result as any)[key] = value;
+				}
+			}
+		});
+	}
+
+	return result;
+}
+
+/**
+ * API Cache Keys are formatted in the following manner. Values that are optional and not provided are, obviously, omitted:
+ *
+ * `${userId}${joinSymbol}${resource | resource.join(joinSymbol)}${joinSymbol}${id}${joinSymbol}${metadata.join(joinSymbol)}`
+ *
+ * @example `auth0|123:chat:9876`, `auth0|123:chat:history:grouped`
+ */
+export function getCacheKey({ userId, id, resource = ['user'], metadata = [], joinSymbol = ':' }: GetCacheKeyOptions) {
+	const key = [];
+
+	if (userId) key.push(userId);
+	if (resource.length > 0) key.push(resource.join(joinSymbol));
+	if (id) key.push(id);
+	if (metadata.length > 0) key.push(metadata.join(joinSymbol));
+
+	if (key.length === 0) {
+		throw new Error('Cache keys cannot be blank. You must provide something!');
+	}
+
+	return key.join(joinSymbol);
+}

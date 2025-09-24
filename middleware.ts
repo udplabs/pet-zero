@@ -1,10 +1,6 @@
 import { type NextRequest, NextResponse } from 'next/server';
 import { auth0 } from './lib/auth0';
 
-// Place any known public paths here.
-// Checker will use basic 'startsWith' matching, so be specific where necessary.
-const publicPaths = ['/auth', '/'];
-
 export async function middleware(request: NextRequest) {
 	// Always run this first. Short-circuit early to avoid unnecessary processing
 	if (!auth0) {
