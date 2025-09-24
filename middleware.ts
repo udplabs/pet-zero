@@ -16,7 +16,7 @@ export async function middleware(request: NextRequest) {
 	const { pathname } = request.nextUrl;
 
 	// We don't want to process authentication for these paths
-	if (publicPaths.some((p) => p.startsWith(pathname))) {
+	if (pathname.startsWith('/auth') || pathname.startsWith('/')) {
 		return authRes;
 	}
 
