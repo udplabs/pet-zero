@@ -29,6 +29,7 @@ interface Address {
 	region?: string;
 	postal_code?: string;
 	country?: string;
+	nickname?: string;
 }
 
 export interface UserProfile extends GetUsers200ResponseOneOfInner {
