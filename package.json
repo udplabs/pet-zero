@@ -1,7 +1,17 @@
 {
-	"name": "my-v0-project",
-	"version": "0.1.0",
+	"name": "auth0-pet-zero",
+	"version": "0.5.0",
 	"private": true,
+	"author": {
+		"name": "David Januchowski",
+		"email": "david.januchowski@okta.com"
+	},
+	"contributors": [
+		{
+			"name": "Danny Fuhriman",
+			"email": "danny.fuhriman@okta.com"
+		}
+	],
 	"scripts": {
 		"build": "next build",
 		"dev": "next dev",
